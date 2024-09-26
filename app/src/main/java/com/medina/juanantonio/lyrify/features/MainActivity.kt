@@ -26,15 +26,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     // From External Browser
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.data?.let {
+        intent.data?.let {
             val response = AuthorizationResponse.fromUri(it)
             viewModel.authorizationResponse.value = response
         }
     }
 
     // From Fragment Dialog
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode != SpotifyUseCase.REQUEST_CODE) return
@@ -43,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.authorizationResponse.value = response
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-        return when (event?.keyCode) {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return when (event.keyCode) {
             KEYCODE_VOLUME_UP,
             KEYCODE_VOLUME_DOWN -> {
                 viewModel.dispatchKeyEvent.value = event
